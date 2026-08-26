@@ -1,863 +1,975 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ayush Kandpal — Video Editor</title>
-<meta name="description" content="Ayush Kandpal — Freelance Video Editor. Clean cuts, color grading, reels & short-form content.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
- 
-  /* PREMIUM DARK THEME */
-  :root {
-    --bg: #0a0a0a;
-    --bg2: #141414;
-    --dark: #ffffff;
-    --ink: #e0e0e0;
-    --muted: #9e9e9e;
-    --accent: #E5A93D;
-    --accent2: #f2c36b;
-    --border: rgba(255,255,255,0.08);
-    --white: #111111;
-  }
- 
-  html { scroll-behavior: smooth; }
- 
-  body {
-    background: var(--bg);
-    color: var(--ink);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    line-height: 1.7;
-    -webkit-font-smoothing: antialiased;
-  }
- 
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 48px;
-    background: rgba(10, 10, 10, 0.85);
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--border);
-  }
-  .logo {
-    font-family: 'DM Serif Display', serif;
-    font-size: 22px;
-    color: var(--dark);
-    letter-spacing: 1px;
-  }
-  .logo span { color: var(--accent); }
-  nav ul { display: flex; gap: 32px; list-style: none; }
-  nav a {
-    font-size: 13px;
-    font-weight: 400;
-    color: var(--muted);
-    text-decoration: none;
-    transition: color 0.2s;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-  }
-  nav a:hover { color: var(--accent); }
- 
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    padding: 100px 48px 80px;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: -100px; right: -100px;
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(229, 169, 61, 0.05) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .hero-inner {
-    max-width: 680px;
-    position: relative;
-    z-index: 1;
-  }
-  .hero-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 28px;
-  }
-  .hero-tag::before {
-    content: '';
-    display: block;
-    width: 28px; height: 2px;
-    background: var(--accent);
-  }
-  h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(44px, 6vw, 76px);
-    font-weight: 400;
-    line-height: 1.08;
-    color: var(--dark);
-    letter-spacing: -1px;
-    margin-bottom: 24px;
-  }
-  h1 em {
-    font-style: italic;
-    color: var(--accent);
-  }
-  .hero-desc {
-    font-size: 16px;
-    color: var(--muted);
-    line-height: 1.8;
-    max-width: 480px;
-    margin-bottom: 40px;
-  }
-  .hero-actions {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 14px 28px;
-    background: var(--accent);
-    color: #000;
-    font-size: 13px;
-    font-weight: 600;
-    text-decoration: none;
-    border-radius: 4px;
-    transition: background 0.2s, transform 0.15s;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
-  .btn-outline {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 13px 28px;
-    border: 1px solid var(--border);
-    color: var(--ink);
-    font-size: 13px;
-    font-weight: 400;
-    text-decoration: none;
-    border-radius: 4px;
-    transition: border-color 0.2s, color 0.2s;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
-  .hero-scroll-hint {
-    position: absolute;
-    bottom: 36px;
-    left: 48px;
-    font-size: 11px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .scroll-dash {
-    width: 32px; height: 1px;
-    background: var(--muted);
-  }
- 
-  /* SECTION BASE */
-  section { padding: 88px 48px; }
-  .section-label {
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--accent);
-    font-weight: 500;
-    margin-bottom: 12px;
-  }
-  h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(32px, 4vw, 48px);
-    font-weight: 400;
-    line-height: 1.15;
-    color: var(--dark);
-    letter-spacing: -0.5px;
-    margin-bottom: 16px;
-  }
-  .section-sub {
-    font-size: 15px;
-    color: var(--muted);
-    max-width: 480px;
-    line-height: 1.8;
-    margin-bottom: 56px;
-  }
- 
-  /* WORK */
-  #work { background: var(--bg); }
-  .work-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 24px;
-    margin-top: 48px;
-  }
-  .work-card {
-    border-radius: 8px;
-    overflow: hidden;
-    background: var(--white);
-    border: 1px solid var(--border);
-    transition: transform 0.3s ease, border-color 0.3s ease;
-    display: flex;
-    flex-direction: column;
-  }
-  .work-card:hover {
-    transform: translateY(-6px);
-    border-color: rgba(229, 169, 61, 0.3);
-  }
-  
-  .work-thumb {
-    width: 100%;
-    height: 540px; 
-    background: var(--bg2);
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .work-thumb iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-  }
- 
-  .work-info {
-    padding: 24px 20px;
-    flex-grow: 1;
-  }
-  .work-category {
-    font-size: 10px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--accent);
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-  .work-title {
-    font-size: 17px;
-    font-weight: 500;
-    color: var(--dark);
-    margin-bottom: 8px;
-  }
-  .work-desc {
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.6;
-  }
-  .work-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 18px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--accent);
-    text-decoration: none;
-    letter-spacing: 0.5px;
-  }
-  .work-link svg { transition: transform 0.2s; }
-  .work-link:hover svg { transform: translateX(3px) scale(1.05); }
- 
-  /* SKILLS */
-  #skills { background: var(--bg2); }
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 16px;
-  }
-  .skill-item {
-    padding: 24px 22px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: rgba(255,255,255,0.01);
-    transition: border-color 0.3s, background 0.3s, transform 0.2s;
-  }
-  .skill-item:hover {
-    border-color: rgba(229, 169, 61, 0.3);
-    background: rgba(229, 169, 61, 0.03);
-    transform: translateY(-2px);
-  }
-  .skill-icon {
-    font-size: 26px;
-    margin-bottom: 12px;
-  }
-  .skill-name {
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--dark);
-    margin-bottom: 6px;
-  }
-  .skill-desc {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.5;
-  }
- 
-  /* ABOUT */
-  #about { background: var(--bg); }
-  .about-grid {
-    display: grid;
-    grid-template-columns: 1fr 1.4fr;
-    gap: 64px;
-    align-items: start;
-  }
-  .about-card {
-    background: var(--bg2);
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    padding: 32px;
-    text-align: center;
-  }
-  .avatar {
-    width: 96px; height: 96px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'DM Serif Display', serif;
-    font-size: 36px;
-    color: #000;
-    margin: 0 auto 20px;
-  }
-  .about-name {
-    font-family: 'DM Serif Display', serif;
-    font-size: 24px;
-    color: var(--dark);
-    margin-bottom: 4px;
-  }
-  .about-role {
-    font-size: 12px;
-    color: var(--accent);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    font-weight: 600;
-  }
-  .about-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-top: 20px;
-  }
-  .mini-stat {
-    padding: 16px 14px;
-    background: var(--bg);
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    text-align: center;
-  }
-  .mini-stat-num {
-    font-family: 'DM Serif Display', serif;
-    font-size: 28px;
-    color: var(--accent);
-  }
-  .mini-stat-label {
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .about-text p {
-    font-size: 16px;
-    color: var(--muted);
-    line-height: 1.9;
-    margin-bottom: 20px;
-  }
-  .about-text p strong { color: var(--dark); }
-  .tools-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 28px;
-  }
-  .tool-tag {
-    padding: 8px 16px;
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 100px;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--ink);
-    transition: background 0.3s, border-color 0.3s;
-  }
-  .tool-tag:hover {
-    background: rgba(229, 169, 61, 0.1);
-    border-color: var(--accent);
-    color: var(--accent);
-  }
- 
-  /* CONTACT */
-  #contact { background: var(--bg2); }
-  .contact-wrap {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 64px;
-    align-items: start;
-  }
-  .contact-links {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-top: 8px;
-  }
-  .contact-link {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 18px 24px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    text-decoration: none;
-    color: var(--ink);
-    font-size: 14px;
-    transition: border-color 0.2s, transform 0.15s;
-  }
-  .contact-link:hover { border-color: var(--accent); transform: translateX(6px); }
-  .contact-link-icon {
-    width: 44px; height: 44px;
-    border-radius: 8px;
-    background: rgba(229, 169, 61, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    flex-shrink: 0;
-  }
-  .contact-link-info strong { display: block; font-size: 14px; font-weight: 500; color: var(--dark); margin-bottom: 2px; }
-  .contact-link-info span { font-size: 13px; color: var(--muted); }
-  .contact-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .field label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .field input, .field textarea, .field select {
-    padding: 14px 16px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    color: var(--dark);
-    outline: none;
-    transition: border-color 0.3s;
-  }
-  .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--accent); }
-  .field textarea { resize: none; height: 120px; }
-  .field select option { background: var(--bg); color: var(--dark); }
-  .form-submit {
-    padding: 16px 32px;
-    background: var(--accent);
-    color: #000;
-    border: none;
-    border-radius: 6px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.3s;
-    align-self: flex-start;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  .form-submit:hover { background: var(--accent2); }
- 
-  /* FOOTER */
-  footer {
-    padding: 32px 48px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
-    background: var(--bg);
-  }
-  footer p { font-size: 13px; color: var(--muted); }
-  .footer-right {
-    display: flex;
-    gap: 24px;
-    align-items: center;
-  }
-  .footer-right a { font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s; text-transform: uppercase; letter-spacing: 0.5px;}
-  .footer-right a:hover { color: var(--accent); }
- 
-  /* ANIMATIONS */
-  .fade-up {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .fade-up.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
- 
-  /* RESPONSIVE */
-  @media (max-width: 768px) {
-    nav { padding: 16px 24px; }
-    nav ul { gap: 20px; }
-    .hero { padding: 120px 24px 60px; }
-    section { padding: 72px 24px; }
-    .about-grid, .contact-wrap { grid-template-columns: 1fr; gap: 48px; }
-    .form-row { grid-template-columns: 1fr; }
-    footer { padding: 24px; flex-direction: column; text-align: center; }
-  }
-</style>
-</head>
-<body>
- 
-<nav>
-  <div class="logo">ayush<span>.</span></div>
-  <ul>
-    <li><a href="#work">Work</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-</nav>
- 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-inner fade-up">
-    <p class="hero-tag">Freelance Video Editor</p>
-    <h1>Telling stories<br>through <em>editing.</em></h1>
-    <p class="hero-desc">
-      Hi, I'm Ayush — a video editor focused on clean cuts, color grading,
-      and short-form content that keeps people watching till the end.
-    </p>
-    <div class="hero-actions">
-      <a href="#work" class="btn-primary">
-        See My Work
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M5 12h14M12 5l7 7-7 7"/>
-        </svg>
-      </a>
-      <a href="#contact" class="btn-outline">Get in Touch</a>
-    </div>
-  </div>
-  <p class="hero-scroll-hint"><span class="scroll-dash"></span> Scroll down</p>
-</section>
- 
-<!-- WORK -->
-<section id="work">
-  <p class="section-label fade-up">Portfolio</p>
-  <h2 class="fade-up">Recent Work</h2>
-  <p class="section-sub fade-up">A selection of videos I've edited — short-form content, reels, and cinematic clips.</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pawan Kapkoti — Premium Photographer & Videographer</title>
+    <meta
+      name="description"
+      content="Pawan Kapkoti — Professional Photographer & Videographer. Government events, weddings, cinematic travel films & national games."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <!-- Premium Modern Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- FontAwesome for Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-  <div class="work-grid">
- 
-    <!-- CARD 1 -->
-    <div class="work-card fade-up">
-      <div class="work-thumb">
-        <iframe src="https://www.instagram.com/reel/DQ3TklLkp9R/embed/" allowtransparency="true" frameborder="0" scrolling="no"></iframe>
-      </div>
-      <div class="work-info">
-        <p class="work-category">Dynamic Edit · Reel</p>
-        <p class="work-title">Engaging Short-Form</p>
-        <p class="work-desc">Fast-paced cuts and visuals optimized for audience retention.</p>
-      </div>
-    </div>
- 
-    <!-- CARD 2 -->
-    <div class="work-card fade-up">
-      <div class="work-thumb">
-        <iframe src="https://www.instagram.com/reel/DSSf3Kvkpet/embed/" allowtransparency="true" frameborder="0" scrolling="no"></iframe>
-      </div>
-      <div class="work-info">
-        <p class="work-category">Creative · Edit</p>
-        <p class="work-title">Creative Storytelling</p>
-        <p class="work-desc">Seamless transitions and sync to capture the viewer's attention.</p>
-      </div>
-    </div>
- 
-    <!-- CARD 3 -->
-    <div class="work-card fade-up">
-      <div class="work-thumb">
-        <iframe src="https://www.instagram.com/reel/DSFsfM0kkoG/embed/" allowtransparency="true" frameborder="0" scrolling="no"></iframe>
-      </div>
-      <div class="work-info">
-        <p class="work-category">Cinematic · Reel</p>
-        <p class="work-title">Vibe & Atmosphere</p>
-        <p class="work-desc">Color graded and synced with atmospheric beats for maximum impact.</p>
-      </div>
-    </div>
+      /* PREMIUM NEON GRADIENT THEME */
+      :root {
+        --bg: #030305; /* Deep rich black for maximum contrast */
+        --bg2: #08080c;
+        --dark: #ffffff;
+        --ink: #e2e8f0;
+        --muted: #a0aec0;
 
-    <!-- CARD 4 -->
-    <div class="work-card fade-up">
-      <div class="work-thumb">
-        <iframe src="https://www.instagram.com/reel/DWTqPk5Eq-v/embed/" allowtransparency="true" frameborder="0" scrolling="no"></iframe>
-      </div>
-      <div class="work-info">
-        <p class="work-category">Color Grading · Motion</p>
-        <p class="work-title">High-Energy Edit</p>
-        <p class="work-desc">Advanced color correction and motion graphics matched perfectly.</p>
-      </div>
-    </div>
+        /* Neon Colors */
+        --neon-cyan: #00f3ff;
+        --neon-purple: #b000ff;
+        --neon-pink: #ff007f;
 
-    <!-- CARD 5 -->
-    <div class="work-card fade-up">
-      <div class="work-thumb">
-        <iframe src="https://www.instagram.com/reel/DOIrZXkEq3s/embed/" allowtransparency="true" frameborder="0" scrolling="no"></iframe>
-      </div>
-      <div class="work-info">
-        <p class="work-category">Social Media · Reel</p>
-        <p class="work-title">Viral Content Formula</p>
-        <p class="work-desc">Clean subtitle styling and pacing crafted specifically for social feeds.</p>
-      </div>
-    </div>
+        /* Gradients */
+        --gradient-primary: linear-gradient(
+          135deg,
+          var(--neon-cyan),
+          var(--neon-purple)
+        );
+        --gradient-insta: linear-gradient(
+          45deg,
+          #f09433 0%,
+          #e6683c 25%,
+          #dc2743 50%,
+          #cc2366 75%,
+          #bc1888 100%
+        );
 
-  </div>
-</section>
- 
-<!-- SKILLS -->
-<section id="skills">
-  <p class="section-label fade-up">What I Do</p>
-  <h2 class="fade-up">Skills & Tools</h2>
-  <p class="section-sub fade-up">Tools I use and the kind of editing work I take on.</p>
- 
-  <div class="skills-grid">
-    <div class="skill-item fade-up">
-      <div class="skill-icon">✂️</div>
-      <div class="skill-name">Video Editing</div>
-      <div class="skill-desc">Clean cuts, pacing, sequencing for Instagram Reels & short-form</div>
-    </div>
-    <div class="skill-item fade-up">
-      <div class="skill-icon">🎨</div>
-      <div class="skill-name">Color Grading</div>
-      <div class="skill-desc">Cinematic looks, LUT application, exposure & tone correction</div>
-    </div>
-    <div class="skill-item fade-up">
-      <div class="skill-icon">🔤</div>
-      <div class="skill-name">Subtitles & Captions</div>
-      <div class="skill-desc">Animated captions, clean subtitle styling for social content</div>
-    </div>
-    <div class="skill-item fade-up">
-      <div class="skill-icon">🎵</div>
-      <div class="skill-name">Audio Sync</div>
-      <div class="skill-desc">Background music, sound design, voice cleanup & syncing</div>
-    </div>
-    <div class="skill-item fade-up">
-      <div class="skill-icon">⚡</div>
-      <div class="skill-name">Transitions</div>
-      <div class="skill-desc">Smooth cuts, jump cuts, whip pans — whatever the video needs</div>
-    </div>
-    <div class="skill-item fade-up">
-      <div class="skill-icon">📱</div>
-      <div class="skill-name">Short-Form Content</div>
-      <div class="skill-desc">Reels and TikTok edits highly optimized for engagement</div>
-    </div>
-  </div>
-</section>
- 
-<!-- ABOUT -->
-<section id="about">
-  <p class="section-label fade-up">About</p>
-  <h2 class="fade-up">Hi, I'm Ayush.</h2>
- 
-  <div class="about-grid">
-    <div>
-      <div class="about-card fade-up">
-        <div class="avatar">AK</div>
-        <p class="about-name">Ayush Kandpal</p>
-        <p class="about-role">Freelance Video Editor</p>
-        <div style="height:1px;background:var(--border);margin:16px 0;"></div>
-        <div class="about-stats">
-          <div class="mini-stat">
-            <div class="mini-stat-num">5+</div>
-            <div class="mini-stat-label">Videos Edited</div>
+        --glass-bg: rgba(255, 255, 255, 0.02);
+        --glass-border: rgba(255, 255, 255, 0.06);
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Outfit", sans-serif; /* Modern body font */
+        font-size: 16px;
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      /* HEADINGS TYPOGRAPHY */
+      h1,
+      h2,
+      h3,
+      h4,
+      .logo {
+        font-family:
+          "Space Grotesk", sans-serif; /* Premium geometric heading font */
+        letter-spacing: -0.5px;
+      }
+
+      /* Gradient Text Utility */
+      .text-gradient {
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+      }
+
+      /* NAV */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 48px;
+        background: rgba(3, 3, 5, 0.7);
+        backdrop-filter: blur(15px);
+        border-bottom: 1px solid var(--glass-border);
+      }
+      .logo {
+        font-weight: 700;
+        font-size: 26px;
+        color: var(--dark);
+        letter-spacing: -1px;
+      }
+      .logo span {
+        color: var(--neon-cyan);
+        text-shadow: 0 0 12px rgba(0, 243, 255, 0.6);
+      }
+      nav ul {
+        display: flex;
+        gap: 35px;
+        list-style: none;
+      }
+      nav a {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--muted);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      nav a:hover {
+        color: var(--dark);
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      }
+
+      /* HERO */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 120px 20px 80px;
+        position: relative;
+        background:
+          radial-gradient(
+            circle at center,
+            rgba(176, 0, 255, 0.1) 0%,
+            transparent 50%
+          ),
+          linear-gradient(rgba(3, 3, 5, 0.8), rgba(3, 3, 5, 1)),
+          url("https://images.unsplash.com/photo-1452587925148-ce544e77e70d?auto=format&fit=crop&q=80")
+            no-repeat center center/cover;
+      }
+
+      .hero-profile {
+        position: relative;
+        margin-bottom: 30px;
+      }
+      .hero-profile img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid transparent;
+        background: var(--gradient-primary);
+        padding: 3px;
+        box-shadow:
+          0 0 30px rgba(0, 243, 255, 0.3),
+          0 0 30px rgba(176, 0, 255, 0.3);
+      }
+
+      .hero h1 {
+        font-size: clamp(42px, 6vw, 72px);
+        font-weight: 700;
+        margin-bottom: 15px;
+        text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      .hero-subtitle {
+        font-size: 18px;
+        color: var(--muted);
+        font-weight: 400;
+        margin-bottom: 40px;
+        letter-spacing: 1px;
+      }
+
+      .hero-buttons {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .btn-glass {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 35px;
+        border-radius: 50px;
+        font-size: 15px;
+        font-family: "Outfit", sans-serif;
+        font-weight: 600;
+        text-decoration: none;
+        color: #fff;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+      }
+
+      .btn-behance-hero {
+        background: var(--gradient-primary);
+        box-shadow: 0 10px 30px rgba(176, 0, 255, 0.4);
+        border: none;
+      }
+
+      .btn-insta-hero {
+        background: transparent;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+      }
+      .btn-insta-hero:hover {
+        border-color: transparent;
+        background: var(--gradient-insta);
+        box-shadow: 0 10px 30px rgba(220, 39, 67, 0.4);
+      }
+
+      .btn-behance-hero:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 15px 40px rgba(0, 243, 255, 0.5);
+      }
+
+      /* SECTION BASE */
+      section {
+        padding: 100px 48px;
+      }
+      .section-label {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 13px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--neon-cyan);
+        font-weight: 700;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+      h2 {
+        font-size: clamp(36px, 4vw, 48px);
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      .section-sub {
+        font-size: 16px;
+        color: var(--muted);
+        max-width: 650px;
+        margin: 0 auto 60px auto;
+        text-align: center;
+      }
+
+      /* ABOUT & SUMMARY */
+      #about {
+        background: var(--bg2);
+      }
+      .about-container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: var(--glass-bg);
+        backdrop-filter: blur(15px);
+        border: 1px solid var(--glass-border);
+        padding: 50px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        position: relative;
+        overflow: hidden;
+      }
+      .about-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: var(--gradient-primary);
+      }
+      .about-container p {
+        font-size: 18px;
+        color: var(--ink);
+        line-height: 1.8;
+        margin-bottom: 25px;
+      }
+
+      .tools-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 35px;
+        justify-content: center;
+      }
+      .tool-tag {
+        padding: 10px 22px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 100px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--dark);
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .tool-tag:hover {
+        background: rgba(176, 0, 255, 0.1);
+        border-color: var(--neon-purple);
+        color: var(--neon-cyan);
+        box-shadow: 0 0 15px rgba(176, 0, 255, 0.3);
+        transform: translateY(-2px);
+      }
+
+      /* SKILLS */
+      #skills {
+        background: var(--bg);
+      }
+      .skills-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 25px;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .skill-item {
+        padding: 35px 25px;
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 12px;
+      }
+      .skill-item:hover {
+        border-color: rgba(0, 243, 255, 0.4);
+        background: linear-gradient(
+          180deg,
+          rgba(0, 243, 255, 0.05) 0%,
+          transparent 100%
+        );
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(0, 243, 255, 0.1);
+      }
+      .skill-icon {
+        font-size: 32px;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 5px;
+      }
+      .skill-name {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--dark);
+        font-family: "Space Grotesk", sans-serif;
+      }
+      .skill-desc {
+        font-size: 15px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      /* EXPERIENCE & PROJECTS */
+      #experience {
+        background: var(--bg2);
+      }
+      .experience-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 35px;
+      }
+      .exp-category {
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        padding: 40px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+      .exp-category:hover {
+        border-color: rgba(176, 0, 255, 0.4);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+      }
+      .exp-category h3 {
+        font-size: 24px;
+        color: var(--dark);
+        margin-bottom: 25px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .exp-category h3 i {
+        color: var(--neon-cyan);
+      }
+      .exp-item {
+        margin-bottom: 25px;
+      }
+      .exp-item:last-child {
+        margin-bottom: 0;
+      }
+      .exp-item h4 {
+        font-size: 19px;
+        color: var(--dark);
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+      .exp-item p {
+        font-size: 15.5px;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      /* PORTFOLIO (Instagram Reels) */
+      #work {
+        background: var(--bg);
+      }
+      .work-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .work-card {
+        border-radius: 16px;
+        overflow: hidden;
+        background: #000;
+        border: 1px solid var(--glass-border);
+        transition: all 0.4s ease;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+      }
+      .work-card:hover {
+        transform: translateY(-8px);
+        border-color: var(--neon-cyan);
+        box-shadow:
+          0 15px 35px rgba(0, 243, 255, 0.2),
+          0 0 15px rgba(176, 0, 255, 0.2);
+      }
+      .work-thumb {
+        width: 100%;
+        height: 580px;
+        position: relative;
+      }
+      .work-thumb iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+
+      /* FOOTER */
+      footer {
+        padding: 40px 48px;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        background: #020203;
+      }
+      footer p {
+        font-size: 14px;
+        color: var(--muted);
+      }
+      .footer-right {
+        display: flex;
+        gap: 30px;
+      }
+      .footer-right a {
+        font-size: 14px;
+        color: var(--muted);
+        text-decoration: none;
+        transition: all 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 500;
+      }
+      .footer-right a:hover {
+        color: var(--neon-cyan);
+        text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
+      }
+
+      /* ANIMATIONS */
+      .fade-up {
+        opacity: 0;
+        transform: translateY(40px);
+        transition:
+          opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+          transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .fade-up.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* RESPONSIVE */
+      @media (max-width: 768px) {
+        nav {
+          padding: 15px 25px;
+        }
+        nav ul {
+          display: none;
+        }
+        .hero {
+          padding: 140px 20px 80px;
+        }
+        section {
+          padding: 80px 20px;
+        }
+        .about-container,
+        .exp-category {
+          padding: 25px;
+        }
+        footer {
+          flex-direction: column;
+          text-align: center;
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="logo">Pawan<span>.</span></div>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#work">Portfolio</a></li>
+      </ul>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-inner fade-up">
+        <div class="hero-profile">
+          <img
+            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80"
+            alt="Pawan Kapkoti"
+          />
+        </div>
+        <h1 class="text-gradient">Pawan Kapkoti</h1>
+        <p class="hero-subtitle">
+          Professional Photographer & Videographer | 5+ Years Experience
+        </p>
+
+        <div class="hero-buttons">
+          <a
+            href="https://www.behance.net/pawankapkoti1"
+            target="_blank"
+            class="btn-glass btn-behance-hero"
+          >
+            <i class="fa-brands fa-behance"></i> Behance Portfolio
+          </a>
+          <!-- USER PROVIDED INSTAGRAM HIGHLIGHT LINK HERE -->
+          <a
+            href="https://www.instagram.com/s/aGlnaGxpZ2h0OjE4MzU2MTM2MjU2MTMyMDE4?story_media_id=3557396321131042653&igsi=MTlyM3FuYnIxbWdsdw=="
+            target="_blank"
+            class="btn-glass btn-insta-hero"
+          >
+            <i class="fa-brands fa-instagram"></i> Watch Instagram Reels
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT & SUMMARY -->
+    <section id="about">
+      <p class="section-label fade-up">About Me</p>
+      <h2 class="fade-up">Professional Summary</h2>
+      <div class="about-container fade-up">
+        <p>
+          A highly creative and versatile
+          <span style="color: #fff; font-weight: 500"
+            >Photographer & Videographer</span
+          >
+          with over 5 years of professional experience. Proven expertise in
+          covering high-profile government events, national-level sports,
+          commercial tourism, and luxury weddings across multiple states.
+        </p>
+        <p>
+          Adept at capturing compelling visual narratives, highlighting rich
+          folk traditions, creating engaging social media content (Reels), and
+          delivering high-quality media using top-tier equipment like Gimbals,
+          Drones, and Sony/Canon systems.
+        </p>
+
+        <div class="tools-list fade-up">
+          <span class="tool-tag"
+            ><i class="fa-solid fa-camera"></i> Sony/Canon Systems</span
+          >
+          <span class="tool-tag"
+            ><i class="fa-solid fa-video"></i> Gimbal Stabilization</span
+          >
+          <span class="tool-tag"
+            ><i class="fa-solid fa-plane-up"></i> Drone Piloting</span
+          >
+          <span class="tool-tag"
+            ><i class="fa-solid fa-film"></i> Premiere Pro</span
+          >
+          <span class="tool-tag"
+            ><i class="fa-solid fa-image"></i> Lightroom Grading</span
+          >
+          <span class="tool-tag"
+            ><i class="fa-solid fa-star"></i> And Much More</span
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills">
+      <p class="section-label fade-up">Expertise</p>
+      <h2 class="fade-up">Core Competencies</h2>
+      <div class="skills-grid">
+        <div class="skill-item fade-up">
+          <div class="skill-icon"><i class="fa-solid fa-camera-retro"></i></div>
+          <div class="skill-name">Weddings & Pre-Weddings</div>
+          <div class="skill-desc">
+            Expert in luxury destination weddings and creative pre-wedding
+            shoots across many states.
           </div>
-          <div class="mini-stat">
-            <div class="mini-stat-num">3</div>
-            <div class="mini-stat-label">Tools Used</div>
+        </div>
+        <div class="skill-item fade-up">
+          <div class="skill-icon"><i class="fa-solid fa-plane"></i></div>
+          <div class="skill-name">Drone & Gimbal Operation</div>
+          <div class="skill-desc">
+            Smooth cinematography using advanced gimbals, drones, and
+            professional Sony/Canon setups.
+          </div>
+        </div>
+        <div class="skill-item fade-up">
+          <div class="skill-icon"><i class="fa-solid fa-landmark"></i></div>
+          <div class="skill-name">Government & VIP Coverage</div>
+          <div class="skill-desc">
+            Official shoots for Cabinet Ministers, National Games, and major
+            public events.
+          </div>
+        </div>
+        <div class="skill-item fade-up">
+          <div class="skill-icon">
+            <i class="fa-solid fa-masks-theater"></i>
+          </div>
+          <div class="skill-name">Folk Traditions & Culture</div>
+          <div class="skill-desc">
+            Capturing the true essence of local folk traditions, cultural melas,
+            and heritage.
+          </div>
+        </div>
+        <div class="skill-item fade-up">
+          <div class="skill-icon">
+            <i class="fa-solid fa-mobile-screen"></i>
+          </div>
+          <div class="skill-name">Social Media Reels</div>
+          <div class="skill-desc">
+            Creating viral, high-retention short-form content and reels for
+            Instagram.
+          </div>
+        </div>
+        <div class="skill-item fade-up">
+          <div class="skill-icon">
+            <i class="fa-solid fa-hands-holding-child"></i>
+          </div>
+          <div class="skill-name">Documentary & NGO</div>
+          <div class="skill-desc">
+            Ground-level impactful photography and cinematic storytelling for
+            NGOs and travel projects.
           </div>
         </div>
       </div>
-    </div>
- 
-    <div class="about-text fade-up">
-      <p>
-        I'm a <strong>beginner video editor</strong> who takes editing seriously. 
-        I've been learning and building my skills by working on personal projects — 
-        short films, reels, vlogs — and I'm now looking to take on freelance work 
-        so I can grow while delivering real value to clients.
-      </p>
-      <p>
-        I care about the <strong>story behind every video</strong>. Good editing isn't just cuts —
-        it's pacing, music choice, color tone, and knowing what to leave out.
-        That's what I focus on in every project.
-      </p>
-      <div class="tools-list">
-        <span class="tool-tag">Premiere Pro</span>
-        <span class="tool-tag">After Effects</span>
-        <span class="tool-tag">DaVinci Resolve</span>
-        <span class="tool-tag">Instagram Reels</span>
-        <span class="tool-tag">Color Grading</span>
-      </div>
-    </div>
-  </div>
-</section>
- 
-<!-- CONTACT -->
-<section id="contact">
-  <p class="section-label fade-up">Contact</p>
-  <h2 class="fade-up">Let's work together.</h2>
- 
-  <div class="contact-wrap">
-    <div>
-      <p class="section-sub fade-up" style="margin-bottom:28px;">
-        Have a video that needs editing? I'd love to hear about your project.
-        Reach out on any of these platforms.
-      </p>
-      <div class="contact-links">
-        <a href="https://www.instagram.com/ayushkandpal1799" target="_blank" class="contact-link fade-up">
-          <div class="contact-link-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-            </svg>
+    </section>
+
+    <!-- EXPERIENCE & PROJECTS -->
+    <section id="experience">
+      <p class="section-label fade-up">Resume</p>
+      <h2 class="fade-up">Professional Experience & Key Projects</h2>
+      <div class="experience-container">
+        <div class="exp-category fade-up">
+          <h3>
+            <i class="fa-solid fa-building-columns"></i> 1. Government &
+            Official Projects
+          </h3>
+          <div class="exp-item">
+            <h4>Uttarakhand Tourism & Cabinet Minister</h4>
+            <p>
+              Worked closely with the Tourism Cabinet Minister of Uttarakhand.
+              Captured high-quality promotional content to boost state tourism.
+            </p>
           </div>
-          <div class="contact-link-info">
-            <strong>Instagram</strong>
-            <span>@ayushkandpal1799 — DM me here</span>
+          <div class="exp-item">
+            <h4>Government Block Mela & Folk Traditions</h4>
+            <p>
+              Official coverage of the government-organized Block Mela. Created
+              engaging reels and documented key cultural moments, traditional
+              Aarti, folk performances, and local exhibitions.
+            </p>
           </div>
-        </a>
-        <a href="https://reddit.com/u/YOUR_USERNAME" target="_blank" class="contact-link fade-up">
-          <div class="contact-link-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
-              <line x1="9" y1="9" x2="9.01" y2="9"></line>
-              <line x1="15" y1="9" x2="15.01" y2="9"></line>
-            </svg>
+          <div class="exp-item">
+            <h4>38th National Games</h4>
+            <p>
+              Official photography and videography coverage of athletes and
+              major sporting events, ensuring high-energy and precise sports
+              captures.
+            </p>
           </div>
-          <div class="contact-link-info">
-            <strong>Reddit</strong>
-            <span>u/YOUR_USERNAME</span>
-          </div>
-        </a>
-        <a href="https://linkedin.com/in/YOUR_USERNAME" target="_blank" class="contact-link fade-up">
-          <div class="contact-link-icon">
-             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-               <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-               <rect x="2" y="9" width="4" height="12"></rect>
-               <circle cx="4" cy="4" r="2"></circle>
-             </svg>
-          </div>
-          <div class="contact-link-info">
-            <strong>LinkedIn</strong>
-            <span>linkedin.com/in/YOUR_USERNAME</span>
-          </div>
-        </a>
-      </div>
-    </div>
- 
-    <form class="contact-form fade-up" onsubmit="handleSubmit(event)">
-      <div class="form-row">
-        <div class="field">
-          <label>Name</label>
-          <input type="text" placeholder="Your name" required>
         </div>
-        <div class="field">
-          <label>Email</label>
-          <input type="email" placeholder="your@email.com" required>
+        <div class="exp-category fade-up">
+          <h3>
+            <i class="fa-solid fa-ring"></i> 2. Commercial, Pre-Wedding &
+            Destination Weddings
+          </h3>
+          <div class="exp-item">
+            <h4>Pan-India Weddings (Many States)</h4>
+            <p>
+              Successfully shot and delivered premium photography and cinematic
+              wedding/pre-wedding films for various clients in Mumbai and across
+              multiple other states in India.
+            </p>
+          </div>
+        </div>
+        <div class="exp-category fade-up">
+          <h3>
+            <i class="fa-solid fa-handshake-angle"></i> 3. NGO & Travel Projects
+          </h3>
+          <div class="exp-item">
+            <h4>Munsiyari NGO Project</h4>
+            <p>
+              Collaborated with a prominent NGO in Munsiyari, Uttarakhand, to
+              document their social initiatives and ground-level impact through
+              powerful visual storytelling.
+            </p>
+          </div>
+          <div class="exp-item">
+            <h4>Travel & Landscape Freelance</h4>
+            <p>
+              Extensive experience in drone and gimbal landscape shoots across
+              challenging terrains in Himachal Pradesh and Uttarakhand.
+            </p>
+          </div>
         </div>
       </div>
-      <div class="field">
-        <label>Project Type</label>
-        <select>
-          <option value="">Select a type</option>
-          <option>Instagram Reel / Short</option>
-          <option>Brand / Commercial</option>
-          <option>Other</option>
-        </select>
+    </section>
+
+    <!-- PORTFOLIO (15 Instagram Reels) -->
+    <section id="work">
+      <p class="section-label fade-up">Showcase</p>
+      <h2 class="fade-up">Featured Work & Reels</h2>
+      <div class="work-grid">
+        <!-- Batch 1 -->
+        <div class="work-card fade-up">
+          <div class="work-thumb">
+            <iframe
+              src="https://www.instagram.com/reel/CxmSp0Fri53/embed/"
+              allowtransparency="true"
+              frameborder="0"
+              scrolling="no"
+            ></iframe>
+          </div>
+        </div>
+        <div class="work-card fade-up">
+          <div class="work-thumb">
+            <iframe
+              src="https://www.instagram.com/reel/CulMlr7A1jK/embed/"
+              allowtransparency="true"
+              frameborder="0"
+              scrolling="no"
+            ></iframe>
+          </div>
+        </div>
+        <div class="work-card fade-up">
+          <div class="work-thumb">
+            <iframe
+              src="https://www.instagram.com/p/C5XKlu2yMIx/embed/"
+              allowtransparency="true"
+              frameborder="0"
+              scrolling="no"
+            ></iframe>
+          </div>
+        </div>
+        <div class="work-card fade-up">
+          <div class="work-thumb">
+            <iframe
+              src="https://www.instagram.com/reel/Cz-fHdFrUAk/embed/"
+              allowtransparency="true"
+              frameborder="0"
+              scrolling="no"
+            ></iframe>
+          </div>
+        </div>
+        <div class="work-card fade-up">
+          <div class="work-thumb">
+            <iframe
+              src="https://www.instagram.com/reel/DT9LF9BkiXh/embed/"
+              allowtransparency="true"
+              frameborder="0"
+              scrolling="no"
+            ></iframe>
+          </div>
+        </div>
+        <div class="work-card fade-up">
+          <div class="work-thumb">
+            <iframe
+              src="https://www.instagram.com/reel/DTiAv-hEdLP/embed/"
+              allowtransparency="true"
+              frameborder="0"
+              scrolling="no"
+            ></iframe>
+          </div>
+        </div>
+
+        <!-- Batch 2 -->
+        <div class="work-card fade-up">
+          <div class="work-thumb">
+            <iframe
+              src="https://www.instagram.com/reel/C5Kd9jNLSv6/embed/"
+              allowtransparency="true"
+              frameborder="0"
+              scrolling="no"
+            ></iframe>
+          </div>
+        </div>
+        <div class="work-card fade-up">
+          <div class="work-thumb">
+            <iframe
+              src="https://www.instagram.com/p/C_-3e7dhCv_/embed/"
+              allowtransparency="true"
+              frameborder="0"
+              scrolling="no"
+            ></iframe>
+          </div>
+        </div>
+        <div class="work-card fade-up">
+          <div class="work-thumb">
+            <iframe
+              src="https://www.instagram.com/reel/C6i6olUL8JZ/embed/"
+              allowtransparency="true"
+              frameborder="0"
+              scrolling="no"
+            ></iframe>
+          </div>
+        </div>
+        <div class="work-card fade-up">
+          <div class="work-thumb">
+            <iframe
+              src="https://www.instagram.com/reel/C4k2EfNr-tI/embed/"
+              allowtransparency="true"
+              frameborder="0"
+              scrolling="no"
+            ></iframe>
+          </div>
+        </div>
+        <div class="work-card fade-up">
+          <div class="work-thumb">
+            <iframe
+              src="https://www.instagram.com/reel/Cyc3-RBr3fT/embed/"
+              allowtransparency="true"
+              frameborder="0"
+              scrolling="no"
+            ></iframe>
+          </div>
+        </div>
+        <div class="work-card fade-up">
+          <div class="work-thumb">
+            <iframe
+              src="https://www.instagram.com/reel/Cw5n6qCBRPZ/embed/"
+              allowtransparency="true"
+              frameborder="0"
+              scrolling="no"
+            ></iframe>
+          </div>
+        </div>
+        <div class="work-card fade-up">
+          <div class="work-thumb">
+            <iframe
+              src="https://www.instagram.com/reel/CwpGTBlSev2/embed/"
+              allowtransparency="true"
+              frameborder="0"
+              scrolling="no"
+            ></iframe>
+          </div>
+        </div>
+        <div class="work-card fade-up">
+          <div class="work-thumb">
+            <iframe
+              src="https://www.instagram.com/reel/CtYZjFkr2pg/embed/"
+              allowtransparency="true"
+              frameborder="0"
+              scrolling="no"
+            ></iframe>
+          </div>
+        </div>
+        <div class="work-card fade-up">
+          <div class="work-thumb">
+            <iframe
+              src="https://www.instagram.com/reel/CndflN5hKNH/embed/"
+              allowtransparency="true"
+              frameborder="0"
+              scrolling="no"
+            ></iframe>
+          </div>
+        </div>
       </div>
-      <div class="field">
-        <label>Message</label>
-        <textarea placeholder="Tell me about your project..." required></textarea>
+    </section>
+
+    <footer>
+      <p>© 2026 Pawan Kapkoti — Professional Photographer & Videographer</p>
+      <div class="footer-right">
+        <!-- USER PROVIDED INSTAGRAM HIGHLIGHT LINK HERE ALSO -->
+        <a
+          href="https://www.instagram.com/s/aGlnaGxpZ2h0OjE4MzU2MTM2MjU2MTMyMDE4?story_media_id=3557396321131042653&igsi=MTlyM3FuYnIxbWdsdw=="
+          target="_blank"
+          >Instagram</a
+        >
+        <a href="https://www.behance.net/pawankapkoti1" target="_blank"
+          >Behance</a
+        >
       </div>
-      <button type="submit" class="form-submit">Send Message →</button>
-      <p id="form-msg" style="font-size:13px;color:var(--accent);display:none;margin-top:4px;">
-        Thanks! I'll get back to you soon.
-      </p>
-    </form>
-  </div>
-</section>
- 
-<footer>
-  <p>© 2026 Ayush Kandpal — Video Editor</p>
-  <div class="footer-right">
-    <a href="https://www.instagram.com/ayushkandpal1799" target="_blank">Instagram</a>
-    <a href="https://reddit.com/u/YOUR_USERNAME" target="_blank">Reddit</a>
-    <a href="https://linkedin.com/in/YOUR_USERNAME" target="_blank">LinkedIn</a>
-  </div>
-</footer>
- 
-<script>
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry, i) => {
-    if (entry.isIntersecting) {
-      setTimeout(() => entry.target.classList.add('visible'), i * 60);
-      observer.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.1 });
- 
-document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
- 
-document.querySelectorAll('nav a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => {
-    e.preventDefault();
-    document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
-  });
-});
- 
-function handleSubmit(e) {
-  e.preventDefault();
-  document.getElementById('form-msg').style.display = 'block';
-  e.target.reset();
-}
-</script>
-</body>
+    </footer>
+
+    <script>
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+              setTimeout(() => entry.target.classList.add("visible"), i * 70);
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+
+      document
+        .querySelectorAll(".fade-up")
+        .forEach((el) => observer.observe(el));
+
+      document.querySelectorAll('nav a[href^="#"]').forEach((a) => {
+        a.addEventListener("click", (e) => {
+          e.preventDefault();
+          document
+            .querySelector(a.getAttribute("href"))
+            ?.scrollIntoView({ behavior: "smooth" });
+        });
+      });
+    </script>
+  </body>
 </html>
+`
